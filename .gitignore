@@ -1,3 +1,11 @@
+local_settings.py
+
+# PyCharm stuff
+.idea
+
+# SQLite database
+*.sqlite3
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
