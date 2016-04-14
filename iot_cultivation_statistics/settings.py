@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'iot_cultivation_statistics',
+    'iot_cultivation_statistics.accounts',
 ]
 
 MIDDLEWARE_CLASSES = [
