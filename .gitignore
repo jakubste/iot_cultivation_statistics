@@ -1,4 +1,4 @@
-local_settings.py
+iot_cultivation_statistics/local_settings.py
 
 # PyCharm stuff
 .idea
