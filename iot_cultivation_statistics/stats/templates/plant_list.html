@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Twoje roślinki
+{% endblock %}
+
+{% block content %}
+
+    {% for plant in plants %}
+        {{ plant }}
+    {% endfor %}
+
+{% endblock %}
