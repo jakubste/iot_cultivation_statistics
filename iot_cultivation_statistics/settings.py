@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'iot_cultivation_statistics',
     'iot_cultivation_statistics.accounts',
+    'iot_cultivation_statistics.stats',
 ]
 
 MIDDLEWARE_CLASSES = [
