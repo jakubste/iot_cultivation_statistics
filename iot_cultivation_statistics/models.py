@@ -1,21 +1,17 @@
 from django.db import models
 
-class Temperature(models.Model):
-    deviceId = models.IntegerField()
+class Plants(models.Model):
+	userId = models.IntegerField()
+	plantId = models.IntegerField()
+
+class Measurement(models.Model):
+    plant = models.ForeignKey(Plants)
     date = models.DateTimeField('measurement date')
     temp = models.FloatField('temperature')
-
-class AirHumidity(models.Model):
-    deviceId = models.IntegerField()
-    date = models.DateTimeField('measurement date')
-    humidity = models.FloatField('air humidity')
-
-class SoilHumidity(models.Model):
-    deviceId = models.IntegerField()
-    date = models.DateTimeField('measurement date')
-    humidity = models.FloatField('soil humidity')
+    airHumidity = models.FloatField('air humidity')
+    soilHumidity = models.FloatField('soil humidity')
 
 class Watering(models.Model):
-    deviceId = models.IntegerField()
+    plant = models.ForeignKey(Plants)
     date = models.DateTimeField('watering date')
     amount = models.FloatField('amount in liters')
