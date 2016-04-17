@@ -6,8 +6,14 @@
 
 {% block content %}
 
+    <p>
+        <a href="{% url 'stats:new_plant' %}">
+            <button>Dodaj roślinę</button>
+        </a>
+    </p>
+
     {% for plant in plants %}
-        {{ plant }}
+        {{ plant }} <br>
     {% endfor %}
 
 {% endblock %}

@@ -18,6 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^stats/', include('iot_cultivation_statistics.stats.urls', namespace='stats')),
+    url(r'', include('iot_cultivation_statistics.stats.urls', namespace='stats')),
     url(r'', include('iot_cultivation_statistics.accounts.urls', namespace='accounts')),
 ]
