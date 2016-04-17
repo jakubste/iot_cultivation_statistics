@@ -6,14 +6,30 @@
 
 {% block content %}
 
-    <p>
+    <table class="table">
+        <tr>
+            <th>Nazwa</th>
+            <th>Identyfikator</th>
+        </tr>
+        {% for plant in plants %}
+            <tr>
+                <td>
+                    <a href="{{ plant.get_absolute_url }}">
+                        {{ plant }}
+                    </a>
+                </td>
+                <td>{{ plant.uuid }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <p style="float:right">
         <a href="{% url 'stats:new_plant' %}">
-            <button>Dodaj roślinę</button>
+            <button type="button" class="btn btn-success">
+                <span class="glyphicon glyphicon-plus"></span>
+                Dodaj roślinę
+            </button>
         </a>
     </p>
-
-    {% for plant in plants %}
-        {{ plant }} <br>
-    {% endfor %}
 
 {% endblock %}

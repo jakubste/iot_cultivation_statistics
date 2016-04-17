@@ -36,7 +36,9 @@
         <!-- Grupowanie elementów menu w celu lepszego wyświetlania na urządzeniach moblinych -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Link</a></li>
+                {% if user.is_authenticated %}
+                    <li class="active"><a href="{% url 'stats:plants_list' %}">Twoje rośliny</a></li>
+                {% endif %}
             </ul>
 
             <ul class="nav navbar-nav navbar-right">

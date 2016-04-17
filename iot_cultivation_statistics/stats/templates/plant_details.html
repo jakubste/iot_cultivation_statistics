@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Statystyki uprawy „{{ plant }}”
+{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <tr>
+            <th>Data</th>
+            <th>Temperatura</th>
+            <th>Wilgotność gleby</th>
+            <th>Wilgotność powietrza</th>
+        </tr>
+        {% for measurement in measurments %}
+            <tr>
+                <td>{{ measurment.date }}</td>
+                <td>{{ measurment.temperature }}</td>
+                <td>{{ measurment.air_humidity }}</td>
+                <td>{{ measurment.soil_humidity }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <p style="float:right">
+{#        <a href="{% url 'stats:new_measurement' %}">#}
+            <button type="button" class="btn btn-success">
+                <span class="glyphicon glyphicon-plus"></span>
+                Dodaj pomiar
+            </button>
+{#        </a>#}
+    </p>
+
+{% endblock %}
