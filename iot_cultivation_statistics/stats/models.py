@@ -1,4 +1,5 @@
 # coding=utf-8
+from datetime import datetime
 from uuid import uuid4
 
 from django.contrib.auth.models import User
@@ -51,7 +52,7 @@ class Measurement(models.Model):
 
 class Watering(models.Model):
     plant = models.ForeignKey(Plant, related_name='waterings')
-    date = models.DateTimeField('watering date')
+    date = models.DateTimeField('watering date', default=datetime.now)
     amount = models.IntegerField('amount in milliliters')
 
 
