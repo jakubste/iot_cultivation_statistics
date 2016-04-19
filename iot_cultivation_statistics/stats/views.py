@@ -1,4 +1,6 @@
-from chartjs.colors import COLORS, next_color
+from datetime import datetime, timedelta
+
+from chartjs.colors import next_color
 from chartjs.views.lines import BaseLineChartView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -7,7 +9,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic import UpdateView
 
 from iot_cultivation_statistics.stats.forms import PlantForm, PlantDetailForm
-from iot_cultivation_statistics.stats.models import Plant, Measurement
+from iot_cultivation_statistics.stats.models import Plant, Measurement, Watering
 from iot_cultivation_statistics.stats.models import PlantSettings
 
 
@@ -49,7 +51,7 @@ class PlantDetailView(DetailView):
 class PlantSettingsView(UpdateView):
     model = PlantSettings
     template_name = 'plant_settings.html'
-    fields = ['mode', 'value']
+    fields = ['mode', 'value', 'amount']
 
     def get_object(self, queryset=None):
         plant_slug = self.kwargs.get('slug', '')
@@ -88,17 +90,41 @@ class NewMeasurementAPIFormView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(NewMeasurementAPIFormView, self).get_form_kwargs()
-        plant_uuid = self.kwargs.get('uuid', '')
-        plant = Plant.objects.get(uuid=plant_uuid)
+        plant = self.get_plant()
         kwargs['plant'] = plant
         return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
-        return JsonResponse({'water': '200'})
+        return self.form_response()
 
     def form_invalid(self, form):
         return HttpResponse(status=400)
+
+    def form_response(self):
+        settings = self.get_plant().plantsettings
+        if settings.mode == PlantSettings.TIME_BASED:
+            last_watering = self.get_plant().waterings.order_by('-date')
+            if not last_watering or last_watering[0].date < datetime.now() - timedelta(hourd=settings.value):
+                return self.send_watering_info(settings.amount)
+        elif settings.mode == PlantSettings.HUMIDITY_BASED:
+            humidity = self.get_plant().measurements.order_by('-date')
+            if not humidity or humidity[0].soil_humidity < settings.value:
+                return self.send_watering_info(settings.amount)
+        return HttpResponse(status=201)
+
+    def send_watering_info(self, amount):
+        if amount > 0:
+            self.update_watering_info(amount)
+            return JsonResponse({'water': amount})
+        return HttpResponse(status=202)
+
+    def update_watering_info(self, amount):
+        Watering.objects.create(plant=self.get_plant(), amount=amount)
+
+    def get_plant(self):
+        plant_uuid = self.kwargs.get('uuid', '')
+        return Plant.objects.get(uuid=plant_uuid)
 
 
 class ChartDataView(BaseLineChartView):
