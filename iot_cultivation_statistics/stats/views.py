@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.http.response import JsonResponse, HttpResponse
 from django.views.generic import ListView, DetailView, CreateView
 
 from iot_cultivation_statistics.stats.forms import PlantForm, PlantDetailForm
@@ -57,3 +58,21 @@ class NewMeasurementFormView(CreateView, LoginRequiredMixin):
         plant = Plant.objects.get(slug=plant_slug)
         kwargs['plant'] = plant
         return kwargs
+
+class NewMeasurementAPIFormView(CreateView):
+    form_class = PlantDetailForm
+    template_name = 'plant_details_form.html'
+
+    def get_form_kwargs(self):
+        kwargs = super(NewMeasurementAPIFormView, self).get_form_kwargs()
+        plant_uuid = self.kwargs.get('uuid', '')
+        plant = Plant.objects.get(uuid=plant_uuid)
+        kwargs['plant'] = plant
+        return kwargs
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'water': '200'})
+
+    def form_invalid(self, form):
+        return HttpResponse(status=400)
