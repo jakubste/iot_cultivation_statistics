@@ -72,3 +72,6 @@ class PlantSettings(models.Model):
         default=0,
         validators=[MinValueValidator(0)]
     )
+    amount = models.IntegerField(
+        default=0
+    )

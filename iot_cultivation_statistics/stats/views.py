@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http.response import JsonResponse, HttpResponse
@@ -86,14 +88,29 @@ class NewMeasurementAPIFormView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super(NewMeasurementAPIFormView, self).get_form_kwargs()
-        plant_uuid = self.kwargs.get('uuid', '')
-        plant = Plant.objects.get(uuid=plant_uuid)
+        plant = self.get_plant()
         kwargs['plant'] = plant
         return kwargs
 
     def form_valid(self, form):
         self.object = form.save()
-        return JsonResponse({'water': '200'})
+        return self.send_watering_info()
 
     def form_invalid(self, form):
         return HttpResponse(status=400)
+
+    def send_watering_info(self):
+        settings = self.get_plant().plantsettings
+        if(settings.mode == PlantSettings.TIME_BASED):
+            last_watering = self.get_plant().waterings.order_by('-date')
+            if not last_watering or last_watering[0].date < datetime.now() - timedelta(hourd=settings.value):
+                return JsonResponse({'water': settings.amount})
+        elif (settings.mode == PlantSettings.HUMIDITY_BASED):
+            humidity = self.get_plant().measurements.order_by('-date')
+            if not humidity or humidity[0].soil_humidity < settings.value:
+                return JsonResponse({'water': settings.amount})
+        return HttpResponse(status=201)
+
+    def get_plant(self):
+        plant_uuid = self.kwargs.get('uuid', '')
+        return Plant.objects.get(uuid=plant_uuid)
