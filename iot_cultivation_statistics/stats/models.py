@@ -21,6 +21,7 @@ class Plant(models.Model):
         if not self.pk:
             slug = slugify(self.name)
             original_slug = slug
+            # uniqe
             while Plant.objects.filter(slug=slug):
                 slug = original_slug + str(uuid4())[:3]
 
