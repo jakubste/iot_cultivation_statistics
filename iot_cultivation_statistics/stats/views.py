@@ -138,7 +138,7 @@ class ChartDataView(BaseLineChartView):
     def get_labels(self):
         measurements = self.get_measurements()
         measurements = measurements.values('date')
-        measurements = map(lambda x: x['date'].strftime("%x %H:%M"), measurements)
+        measurements = list(map(lambda x: x['date'].strftime("%x %H:%M"), measurements))
         return measurements
 
     def get_data(self):
@@ -147,9 +147,9 @@ class ChartDataView(BaseLineChartView):
         measurements = self.get_measurements()
         measurements = measurements.values('temperature', 'soil_humidity', 'air_humidity')
         measurements = [
-            map(lambda x: x['temperature'], measurements),
-            map(lambda x: x['soil_humidity'], measurements),
-            map(lambda x: x['air_humidity'], measurements),
+            list(map(lambda x: x['temperature'], measurements)),
+            list(map(lambda x: x['soil_humidity'], measurements)),
+            list(map(lambda x: x['air_humidity'], measurements)),
         ]
         return measurements
 
