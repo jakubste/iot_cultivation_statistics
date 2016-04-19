@@ -34,7 +34,7 @@ class Plant(models.Model):
 
 
 class Measurement(models.Model):
-    plant = models.ForeignKey(Plant)
+    plant = models.ForeignKey(Plant, related_name='measurements')
     date = models.DateTimeField('measurement date')
     temperature = models.FloatField('temperature', null=True, blank=True)
     air_humidity = models.FloatField(
@@ -50,7 +50,7 @@ class Measurement(models.Model):
 
 
 class Watering(models.Model):
-    plant = models.ForeignKey(Plant)
+    plant = models.ForeignKey(Plant, related_name='waterings')
     date = models.DateTimeField('watering date')
     amount = models.IntegerField('amount in milliliters')
 
