@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'iot_cultivation_statistics',
     'iot_cultivation_statistics.accounts',
     'iot_cultivation_statistics.stats',
+    'chartjs',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -123,3 +124,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'public')

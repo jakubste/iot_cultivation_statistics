@@ -15,6 +15,20 @@
         </a>
     </p>
 
+    <div class="col-md-12">
+        <canvas id="myChart" height="500px" width="700px"></canvas>
+    </div>
+
+    <script type="text/javascript">
+
+        $.get('{% url 'stats:chart' plant.slug %}', function (data) {
+            var ctx = $("#myChart").get(0).getContext("2d");
+            new Chart(ctx).Line(data, {
+                responsive: true
+            });
+        });
+    </script>
+
     <table class="table">
         <tr>
             <th>Data</th>

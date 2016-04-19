@@ -1,4 +1,5 @@
 iot_cultivation_statistics/local_settings.py
+public/*
 
 # PyCharm stuff
 .idea

@@ -1,3 +1,5 @@
+from chartjs.colors import COLORS, next_color
+from chartjs.views.lines import BaseLineChartView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http.response import JsonResponse, HttpResponse
@@ -97,3 +99,46 @@ class NewMeasurementAPIFormView(CreateView):
 
     def form_invalid(self, form):
         return HttpResponse(status=400)
+
+
+class ChartDataView(BaseLineChartView):
+    def get_plant(self):
+        slug = self.kwargs.get('slug', '')
+        return Plant.objects.get(slug=slug)
+
+    def get_measurements(self):
+        return Measurement.objects.filter(plant=self.get_plant()).order_by('date')
+
+    def get_labels(self):
+        measurements = self.get_measurements()
+        measurements = measurements.values('date')
+        measurements = map(lambda x: x['date'].strftime("%x %H:%M"), measurements)
+        return measurements
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+
+        measurements = self.get_measurements()
+        measurements = measurements.values('temperature', 'soil_humidity', 'air_humidity')
+        measurements = [
+            map(lambda x: x['temperature'], measurements),
+            map(lambda x: x['soil_humidity'], measurements),
+            map(lambda x: x['air_humidity'], measurements),
+        ]
+        return measurements
+
+    def get_context_data(self, *agrs, **kwargs):
+        data = {}
+        data['labels'] = self.get_labels()
+        data['datasets'] = self.get_datasets()
+        data['colors'] = self.get_colors()
+        return data
+
+    def get_colors(self):
+        """Return a new shuffle list of color so we change the color
+        each time."""
+        return next_color([
+            (200, 200, 0),
+            (128, 42, 42),
+            (0, 0, 200),
+        ])
