@@ -3,3 +3,5 @@ django-extensions
 bpython
 django-chartjs
 dj-config-url
+gunicorn
+whitenoise
