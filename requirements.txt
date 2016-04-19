@@ -2,3 +2,4 @@ Django
 django-extensions
 bpython
 django-chartjs
+dj-config-url
