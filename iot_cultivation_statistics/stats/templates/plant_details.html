@@ -15,21 +15,21 @@
         </tr>
         {% for measurement in measurments %}
             <tr>
-                <td>{{ measurment.date }}</td>
-                <td>{{ measurment.temperature }}</td>
-                <td>{{ measurment.air_humidity }}</td>
-                <td>{{ measurment.soil_humidity }}</td>
+                <td>{{ measurement.date }}</td>
+                <td>{{ measurement.temperature }}</td>
+                <td>{{ measurement.air_humidity }}</td>
+                <td>{{ measurement.soil_humidity }}</td>
             </tr>
         {% endfor %}
     </table>
 
     <p style="float:right">
-{#        <a href="{% url 'stats:new_measurement' %}">#}
+        <a href="{% url 'stats:new_measurement' plant.slug %}">
             <button type="button" class="btn btn-success">
                 <span class="glyphicon glyphicon-plus"></span>
                 Dodaj pomiar
             </button>
-{#        </a>#}
+        </a>
     </p>
 
 {% endblock %}
