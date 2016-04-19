@@ -1,3 +1,4 @@
+# coding=utf-8
 from uuid import uuid4
 
 from django.contrib.auth.models import User
@@ -28,7 +29,7 @@ class Plant(models.Model):
         return super(Plant, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('stats:plant_details', args=(self.slug, ))
+        return reverse('stats:plant_details', args=(self.slug,))
 
 
 class Measurement(models.Model):
@@ -51,3 +52,22 @@ class Watering(models.Model):
     plant = models.ForeignKey(Plant)
     date = models.DateTimeField('watering date')
     amount = models.IntegerField('amount in milliliters')
+
+
+class PlantSettings(models.Model):
+    TIME_BASED = 't'
+    HUMIDITY_BASED = 'h'
+    DEACTIVATE = 'd'
+
+    MODE_CHOICES = (
+        (TIME_BASED, 'Czasowo'),
+        (HUMIDITY_BASED, 'Na podstawie wilgotności'),
+        (DEACTIVATE, 'Wyłącz'),
+    )
+
+    plant = models.OneToOneField(Plant)
+    mode = models.CharField(choices=MODE_CHOICES, max_length=1, default=DEACTIVATE)
+    value = models.FloatField(
+        default=0,
+        validators=[MinValueValidator(0)]
+    )

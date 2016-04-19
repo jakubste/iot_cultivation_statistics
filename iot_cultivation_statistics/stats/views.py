@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from iot_cultivation_statistics.stats.forms import PlantForm
-from iot_cultivation_statistics.stats.models import Plant, Measurement
+from iot_cultivation_statistics.stats.models import Plant, Measurement, PlantSettings
 
 
 class PlantList(ListView, LoginRequiredMixin):
@@ -40,3 +40,20 @@ class PlantDetailView(DetailView):
         ctx = super(PlantDetailView, self).get_context_data(**kwargs)
         ctx['measurments'] = Measurement.objects.filter(plant=self.object)
         return ctx
+
+
+class PlantSettingsView(UpdateView):
+    model = PlantSettings
+    template_name = 'plant_settings.html'
+    fields = ['mode', 'value']
+
+    def get_object(self, queryset=None):
+        plant_slug = self.kwargs.get('slug', '')
+        plant = Plant.objects.get(slug=plant_slug)
+        PlantSettings.objects.get_or_create(plant=plant)
+        return plant.plantsettings
+
+    def get_success_url(self):
+        plant_slug = self.kwargs.get('slug', '')
+        plant = Plant.objects.get(slug=plant_slug)
+        return plant.get_absolute_url()

@@ -10,6 +10,7 @@
         <tr>
             <th>Nazwa</th>
             <th>Identyfikator</th>
+            <th></th>
         </tr>
         {% for plant in plants %}
             <tr>
@@ -19,6 +20,11 @@
                     </a>
                 </td>
                 <td>{{ plant.uuid }}</td>
+                <td>
+                    <a href="{% url 'stats:plant_settings' plant.slug %}">
+                        <span class="glyphicon glyphicon-cog"></span>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </table>

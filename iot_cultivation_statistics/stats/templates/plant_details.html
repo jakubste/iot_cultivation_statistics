@@ -6,6 +6,15 @@
 
 {% block content %}
 
+    <p style="float:right">
+        <a href="{% url 'stats:plant_settings' plant.slug %}">
+            <button type="button" class="btn btn-warning">
+                <span class="glyphicon glyphicon-cog"></span>
+                Ustawienia rośliny
+            </button>
+        </a>
+    </p>
+
     <table class="table">
         <tr>
             <th>Data</th>
