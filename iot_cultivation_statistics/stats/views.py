@@ -92,7 +92,7 @@ class NewMeasurementAPIFormView(CreateView):
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
-        return super(ChromeLoginView, self).dispatch(request, *args, **kwargs)
+        return super(NewMeasurementAPIFormView, self).dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super(NewMeasurementAPIFormView, self).get_form_kwargs()
