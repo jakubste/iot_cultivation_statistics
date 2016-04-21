@@ -105,7 +105,7 @@ class NewMeasurementAPIFormView(CreateView):
         return self.form_response()
 
     def form_invalid(self, form):
-        return HttpResponse(status=400)
+        return HttpResponse(form.errors, status=400)
 
     def form_response(self):
         settings = self.get_plant().plantsettings
