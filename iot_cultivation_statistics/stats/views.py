@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.http.response import JsonResponse, HttpResponse
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic import UpdateView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from iot_cultivation_statistics.stats.forms import PlantForm, PlantDetailForm
 from iot_cultivation_statistics.stats.models import Plant, Measurement, Watering
@@ -87,6 +89,10 @@ class NewMeasurementFormView(CreateView, LoginRequiredMixin):
 class NewMeasurementAPIFormView(CreateView):
     form_class = PlantDetailForm
     template_name = 'plant_details_form.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ChromeLoginView, self).dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super(NewMeasurementAPIFormView, self).get_form_kwargs()
