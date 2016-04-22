@@ -1,8 +1,6 @@
-import uuid
 from datetime import datetime
 
 from django.forms import ModelForm
-from django.utils.text import slugify
 
 from iot_cultivation_statistics.stats.models import Plant, Measurement
 
@@ -23,19 +21,28 @@ class PlantForm(ModelForm):
             plant.save()
         return plant
 
-class PlantDetailForm(ModelForm):
+
+class MeasurementForm(ModelForm):
     class Meta:
         model = Measurement
         fields = ['date', 'temperature', 'air_humidity', 'soil_humidity']
 
     def __init__(self, *args, **kwargs):
         self.plant = kwargs.pop('plant')
-        super(PlantDetailForm, self).__init__(*args, **kwargs)
+        super(MeasurementForm, self).__init__(*args, **kwargs)
+        self.fields['date'].required = False
         self.fields['date'].initial = datetime.now()
 
+    def clean_date(self):
+        date = self.cleaned_data.get('date', None)
+        if not date:
+            date = datetime.now()
+        return date
+
     def save(self, commit=True):
-        plantDetails = super(PlantDetailForm, self).save(False)
+        print self.cleaned_data
+        measurement = super(MeasurementForm, self).save(False)
         if commit:
-            plantDetails.plant = self.plant
-            plantDetails.save()
-        return plantDetails
+            measurement.plant = self.plant
+            measurement.save()
+        return measurement
