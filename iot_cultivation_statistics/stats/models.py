@@ -11,7 +11,7 @@ from django.utils.text import slugify
 
 class Plant(models.Model):
     user = models.ForeignKey(User)
-    name = models.CharField(max_length=150)
+    name = models.CharField('nazwa', max_length=150)
     slug = models.SlugField(max_length=150)
     uuid = models.CharField(max_length=30)
 
@@ -36,15 +36,15 @@ class Plant(models.Model):
 
 class Measurement(models.Model):
     plant = models.ForeignKey(Plant, related_name='measurements')
-    date = models.DateTimeField('measurement date')
-    temperature = models.FloatField('temperature', null=True, blank=True)
+    date = models.DateTimeField('data pomiaru')
+    temperature = models.FloatField('temperatura', null=True, blank=True)
     air_humidity = models.FloatField(
-        'air humidity',
+        'wilgotność powietrza',
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         null=True, blank=True
     )
     soil_humidity = models.FloatField(
-        'soil humidity',
+        'wilgotność gleby',
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         null=True, blank=True
     )
@@ -52,8 +52,8 @@ class Measurement(models.Model):
 
 class Watering(models.Model):
     plant = models.ForeignKey(Plant, related_name='waterings')
-    date = models.DateTimeField('watering date', default=datetime.now)
-    amount = models.IntegerField('amount in milliliters')
+    date = models.DateTimeField('data podlania', default=datetime.now)
+    amount = models.IntegerField('ilość w mililitrach')
 
 
 class PlantSettings(models.Model):
@@ -62,17 +62,19 @@ class PlantSettings(models.Model):
     DEACTIVATE = 'd'
 
     MODE_CHOICES = (
-        (TIME_BASED, 'Czasowo'),
+        (TIME_BASED, 'Co określony czas'),
         (HUMIDITY_BASED, 'Na podstawie wilgotności'),
-        (DEACTIVATE, 'Wyłącz'),
+        (DEACTIVATE, 'Dezaktywuj automatyczne podlewanie'),
     )
 
     plant = models.OneToOneField(Plant)
-    mode = models.CharField(choices=MODE_CHOICES, max_length=1, default=DEACTIVATE)
+    mode = models.CharField('tryb', choices=MODE_CHOICES, max_length=1, default=DEACTIVATE)
     value = models.FloatField(
+        'wartość',
         default=0,
         validators=[MinValueValidator(0)]
     )
     amount = models.IntegerField(
+        'ilość',
         default=0
     )
