@@ -7,8 +7,10 @@ from django.core.urlresolvers import reverse_lazy, reverse
 from django.http.response import JsonResponse, HttpResponse
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic import UpdateView
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
-from iot_cultivation_statistics.stats.forms import PlantForm, PlantDetailForm
+from iot_cultivation_statistics.stats.forms import PlantForm, MeasurementForm
 from iot_cultivation_statistics.stats.models import Plant, Measurement, Watering
 from iot_cultivation_statistics.stats.models import PlantSettings
 
@@ -66,7 +68,7 @@ class PlantSettingsView(UpdateView):
 
 
 class NewMeasurementFormView(CreateView, LoginRequiredMixin):
-    form_class = PlantDetailForm
+    form_class = MeasurementForm
     template_name = 'plant_details_form.html'
 
     def get_success_url(self):
@@ -85,8 +87,12 @@ class NewMeasurementFormView(CreateView, LoginRequiredMixin):
 
 
 class NewMeasurementAPIFormView(CreateView):
-    form_class = PlantDetailForm
+    form_class = MeasurementForm
     template_name = 'plant_details_form.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super(NewMeasurementAPIFormView, self).dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
         kwargs = super(NewMeasurementAPIFormView, self).get_form_kwargs()
@@ -99,7 +105,8 @@ class NewMeasurementAPIFormView(CreateView):
         return self.form_response()
 
     def form_invalid(self, form):
-        return HttpResponse(status=400)
+        print form.errors
+        return JsonResponse(form.errors, status=400)
 
     def form_response(self):
         settings = self.get_plant().plantsettings
