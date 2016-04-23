@@ -4,7 +4,7 @@ from chartjs.colors import next_color
 from chartjs.views.lines import BaseLineChartView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import JsonResponse, HttpResponse, Http404
 from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
@@ -19,6 +19,7 @@ class PlantList(ListView, LoginRequiredMixin):
     model = Plant
     template_name = 'plant_list.html'
     context_object_name = 'plants'
+    active_plants_list = 'active'
 
     def get_queryset(self):
         qs = super(PlantList, self).get_queryset()
@@ -59,6 +60,8 @@ class PlantSettingsView(UpdateView):
         plant_slug = self.kwargs.get('slug', '')
         plant = Plant.objects.get(slug=plant_slug)
         PlantSettings.objects.get_or_create(plant=plant)
+        if plant.user != self.request.user:
+            raise Http404
         return plant.plantsettings
 
     def get_success_url(self):
@@ -69,7 +72,7 @@ class PlantSettingsView(UpdateView):
 
 class NewMeasurementFormView(CreateView, LoginRequiredMixin):
     form_class = MeasurementForm
-    template_name = 'plant_details_form.html'
+    template_name = 'measurement_form.html'
 
     def get_success_url(self):
         plant_slug = self.kwargs.get('slug', '')
@@ -80,15 +83,19 @@ class NewMeasurementFormView(CreateView, LoginRequiredMixin):
 
     def get_form_kwargs(self):
         kwargs = super(NewMeasurementFormView, self).get_form_kwargs()
-        plant_slug = self.kwargs.get('slug', '')
-        plant = Plant.objects.get(slug=plant_slug)
-        kwargs['plant'] = plant
+        kwargs['plant'] = self.plant
         return kwargs
 
+    def dispatch(self, request, *args, **kwargs):
+        plant_slug = self.kwargs.get('slug', '')
+        self.plant = Plant.objects.get(slug=plant_slug)
+        if self.plant.user != self.request.user:
+            raise Http404
+        return super(NewMeasurementFormView, self).dispatch(request, *args, **kwargs)
 
 class NewMeasurementAPIFormView(CreateView):
     form_class = MeasurementForm
-    template_name = 'plant_details_form.html'
+    template_name = 'measurement_form.html'
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -105,7 +112,6 @@ class NewMeasurementAPIFormView(CreateView):
         return self.form_response()
 
     def form_invalid(self, form):
-        print form.errors
         return JsonResponse(form.errors, status=400)
 
     def form_response(self):

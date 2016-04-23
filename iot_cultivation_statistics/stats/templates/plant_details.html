@@ -1,30 +1,31 @@
 {% extends 'base.html' %}
 
+{% load humanize %}
+
 {% block title %}
     Statystyki uprawy „{{ plant }}”
 {% endblock %}
 
 {% block content %}
 
-    <p style="float:right">
-        <a href="{% url 'stats:plant_settings' plant.slug %}">
-            <button type="button" class="btn btn-warning">
-                <span class="glyphicon glyphicon-cog"></span>
-                Ustawienia rośliny
-            </button>
-        </a>
-    </p>
-
-    <div class="col-md-12">
-        <canvas id="myChart" height="500px" width="700px"></canvas>
-    </div>
+    {% if measurments.count >= 2 %}
+        <div class="col-md-12" style="text-align: center">
+            <canvas id="myChart" height="500px" width="700px"></canvas>
+        </div>
+    {% else %}
+        <div class="alert alert-info" style="width: 50%">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            Dodaj co najmniej dwa pomiary aby zobaczyć wykres.
+        </div>
+    {% endif %}
 
     <script type="text/javascript">
 
         $.get('{% url 'stats:chart' plant.slug %}', function (data) {
             var ctx = $("#myChart").get(0).getContext("2d");
             new Chart(ctx).Line(data, {
-                responsive: true
+                responsive: true,
+                datasetFill: false
             });
         });
     </script>
@@ -38,21 +39,31 @@
         </tr>
         {% for measurement in measurments %}
             <tr>
-                <td>{{ measurement.date }}</td>
-                <td>{{ measurement.temperature }}</td>
-                <td>{{ measurement.air_humidity }}</td>
-                <td>{{ measurement.soil_humidity }}</td>
+                <td>{{ measurement.date|naturaltime }}</td>
+                <td>{{ measurement.temperature|default_if_none:"-" }} °C</td>
+                <td>{{ measurement.air_humidity|default_if_none:"-" }} %</td>
+                <td>{{ measurement.soil_humidity|default_if_none:"-" }} %</td>
             </tr>
         {% endfor %}
     </table>
 
-    <p style="float:right">
-        <a href="{% url 'stats:new_measurement' plant.slug %}">
-            <button type="button" class="btn btn-success">
-                <span class="glyphicon glyphicon-plus"></span>
-                Dodaj pomiar
+    {% if plant.user == user %}
+        <div style="float:right" class="btn-group">
+            <button type="button" class="btn btn-warning">
+                <a href="{% url 'stats:plant_settings' plant.slug %}"
+                   style="color: inherit; font: inherit; text-decoration: inherit">
+                    <span class="glyphicon glyphicon-cog"></span>
+                    Ustawienia rośliny
+                </a>
             </button>
-        </a>
-    </p>
+            <button type="button" class="btn btn-success">
+                <a href="{% url 'stats:new_measurement' plant.slug %}"
+                   style="color: inherit; font: inherit; text-decoration: inherit">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    Dodaj pomiar
+                </a>
+            </button>
+        </div>
+    {% endif %}
 
 {% endblock %}

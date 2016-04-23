@@ -8,4 +8,10 @@
     {% if user.is_authenticated %}
         <p> Zalogowany jako {{ user }}.</p>
     {% endif %}
+
+    <p>
+        <a href="{% url 'stats:plants_list' %}">Zobacz swoje rośliny</a> lub
+        <a href="{% url 'accounts:info' %}">przeczytaj o co chodzi</a>.
+    </p>
+
 {% endblock %}

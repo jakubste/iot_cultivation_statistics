@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    O serwisie
+{% endblock %}
+
+{% block content %}
+
+    <p>
+        Serwis powstał w ramach projektu na przedmiot „Technologie internetu rzeczy”.
+    </p>
+
+    <p>
+        Oferuje funkcjonalność zbierania statystyk dotyczących uprawianej rośliny.
+        Użytkownik może też skonfigurować roślinę tak, że serwis podczas dodawania pomiaru przez API wysyła informację
+        do modułu zamontowanego przy roślinie o konieczności podlania rośliny.
+    </p>
+
+    <h3>Jak używać</h3>
+    <p>
+        Moduł powinien wysyłać metodą POST dane dotyczące rośliny pod adres:
+        <code>http://cultivation-statistics.herokuapp.com/dodaj_pomiar_api/&lt;id_rosliny&gt;/</code>
+        gdzie <code>&lt;id_rosliny&gt;</code> jest identyfikatorem rośłiny widocznym w zakładce „Twoje rośliny”.
+    </p>
+
+{% endblock %}

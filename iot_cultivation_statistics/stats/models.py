@@ -37,11 +37,10 @@ class Plant(models.Model):
 class Measurement(models.Model):
     plant = models.ForeignKey(Plant, related_name='measurements')
     date = models.DateTimeField('data pomiaru')
-    temperature = models.FloatField('temperatura', null=True, blank=True)
+    temperature = models.FloatField('temperatura')
     air_humidity = models.FloatField(
         'wilgotność powietrza',
         validators=[MinValueValidator(0), MaxValueValidator(100)],
-        null=True, blank=True
     )
     soil_humidity = models.FloatField(
         'wilgotność gleby',

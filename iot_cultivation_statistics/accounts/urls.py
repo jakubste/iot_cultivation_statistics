@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^zaloguj/$', LoginView.as_view(), name='login'),
     url(r'^wyloguj/$', logout_view, name='logout'),
     url(r'^zarejestruj/$', RegisterView.as_view(), name='register'),
+    url(r'^informacje/$', InfoPage.as_view(), name='info'),
 ]

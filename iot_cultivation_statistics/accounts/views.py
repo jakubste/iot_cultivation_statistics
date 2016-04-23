@@ -44,3 +44,8 @@ class RegisterView(FormView):
         user = authenticate(username=username, password=password)
         login(self.request, user)
         return redirect(self.success_url)
+
+
+class InfoPage(TemplateView):
+    template_name = 'info.html'
+    active_info = 'active'

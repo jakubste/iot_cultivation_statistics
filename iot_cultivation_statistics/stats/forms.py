@@ -40,7 +40,6 @@ class MeasurementForm(ModelForm):
         return date
 
     def save(self, commit=True):
-        print self.cleaned_data
         measurement = super(MeasurementForm, self).save(False)
         if commit:
             measurement.plant = self.plant
