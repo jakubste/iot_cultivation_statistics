@@ -118,7 +118,7 @@ class NewMeasurementAPIFormView(CreateView):
         settings = self.get_plant().plantsettings
         if settings.mode == PlantSettings.TIME_BASED:
             last_watering = self.get_plant().waterings.order_by('-date')
-            if not last_watering or last_watering[0].date < datetime.now() - timedelta(hourd=settings.value):
+            if not last_watering or last_watering[0].date < datetime.now() - timedelta(hours=settings.value):
                 return self.send_watering_info(settings.amount)
         elif settings.mode == PlantSettings.HUMIDITY_BASED:
             humidity = self.get_plant().measurements.order_by('-date')
