@@ -41,10 +41,38 @@
         {% for measurement in measurments %}
             <tr>
                 <td>{{ measurement.date|naturaltime }}</td>
-                <td>{{ measurement.temperature|default_if_none:"-" }} °C</td>
-                <td>{{ measurement.air_humidity|default_if_none:"-" }} %</td>
-                <td>{{ measurement.soil_humidity|default_if_none:"-" }} %</td>
-                <td>{{ measurement.insolation|default_if_none:"-" }} %</td>
+                <td>
+                    {% if measurement.temperature %}
+                        {{ measurement.temperature|floatformat:"-2" }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    °C
+                </td>
+                <td>
+                    {% if measurement.air_humidity %}
+                        {{ measurement.air_humidity|floatformat:"-2" }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    %
+                </td>
+                <td>
+                    {% if measurement.soil_humidity %}
+                        {{ measurement.soil_humidity|floatformat:"-2" }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    %
+                </td>
+                <td>
+                    {% if measurement.insolation %}
+                        {{ measurement.insolation|floatformat:"-2" }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    %
+                </td>
             </tr>
         {% endfor %}
     </table>
