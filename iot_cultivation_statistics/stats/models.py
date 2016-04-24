@@ -47,6 +47,11 @@ class Measurement(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
         null=True, blank=True
     )
+    insolation = models.FloatField(
+        'nasłonecznienie',
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        null=True, blank=True
+    )
 
 
 class Watering(models.Model):

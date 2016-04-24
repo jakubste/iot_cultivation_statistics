@@ -158,11 +158,12 @@ class ChartDataView(BaseLineChartView):
         """Return 3 datasets to plot."""
 
         measurements = self.get_measurements()
-        measurements = measurements.values('temperature', 'soil_humidity', 'air_humidity')
+        measurements = measurements.values('temperature', 'soil_humidity', 'air_humidity', 'insolation')
         measurements = [
             list(map(lambda x: x['temperature'], measurements)),
             list(map(lambda x: x['soil_humidity'], measurements)),
             list(map(lambda x: x['air_humidity'], measurements)),
+            list(map(lambda x: x['insolation'], measurements)),
         ]
         return measurements
 
@@ -177,7 +178,8 @@ class ChartDataView(BaseLineChartView):
         """Return a new shuffle list of color so we change the color
         each time."""
         return next_color([
-            (200, 200, 0),
+            (254, 0, 0),
             (128, 42, 42),
             (0, 0, 200),
+            (220, 220, 0),
         ])

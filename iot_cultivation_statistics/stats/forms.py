@@ -25,7 +25,7 @@ class PlantForm(ModelForm):
 class MeasurementForm(ModelForm):
     class Meta:
         model = Measurement
-        fields = ['date', 'temperature', 'air_humidity', 'soil_humidity']
+        fields = ['date', 'temperature', 'air_humidity', 'soil_humidity', 'insolation']
 
     def __init__(self, *args, **kwargs):
         self.plant = kwargs.pop('plant')

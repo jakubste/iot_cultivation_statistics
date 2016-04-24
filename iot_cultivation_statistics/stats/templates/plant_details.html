@@ -36,6 +36,7 @@
             <th>Temperatura</th>
             <th>Wilgotność powietrza</th>
             <th>Wilgotność gleby</th>
+            <th>Nasłonecznienie</th>
         </tr>
         {% for measurement in measurments %}
             <tr>
@@ -43,6 +44,7 @@
                 <td>{{ measurement.temperature|default_if_none:"-" }} °C</td>
                 <td>{{ measurement.air_humidity|default_if_none:"-" }} %</td>
                 <td>{{ measurement.soil_humidity|default_if_none:"-" }} %</td>
+                <td>{{ measurement.insolation|default_if_none:"-" }} %</td>
             </tr>
         {% endfor %}
     </table>
