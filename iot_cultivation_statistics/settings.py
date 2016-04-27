@@ -134,7 +134,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = STATIC_ROOT = os.path.join(PROJECT_ROOT, 'emails')
+EMAIL_FILE_PATH = os.path.join(PROJECT_ROOT, 'emails')
 	
 try:
     from .local_settings import *
