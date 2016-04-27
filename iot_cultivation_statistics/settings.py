@@ -27,8 +27,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-ADMINS = [('Kuba', 'jakub.ste+iot_errors@gmail.com')]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -133,9 +131,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(PROJECT_ROOT, 'emails')
-	
 try:
     from .local_settings import *
 except ImportError:

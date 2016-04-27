@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.forms import ModelForm
 
-from iot_cultivation_statistics.stats.models import Plant, Measurement
+from iot_cultivation_statistics.stats.models import Plant, Measurement, PlantSettings
 
 
 class PlantForm(ModelForm):
@@ -19,6 +19,7 @@ class PlantForm(ModelForm):
         if commit:
             plant.user = self.user
             plant.save()
+        PlantSettings.objects.create(plant=plant)
         return plant
 
 

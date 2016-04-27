@@ -1,14 +1,15 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from chartjs.colors import next_color
 from chartjs.views.lines import BaseLineChartView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http.response import JsonResponse, HttpResponse, Http404
-from django.views.generic import ListView, DetailView, CreateView
-from django.views.generic import UpdateView
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import UpdateView
 
 from iot_cultivation_statistics.stats.forms import PlantForm, MeasurementForm
 from iot_cultivation_statistics.stats.models import Plant, Measurement, Watering
@@ -93,6 +94,7 @@ class NewMeasurementFormView(CreateView, LoginRequiredMixin):
             raise Http404
         return super(NewMeasurementFormView, self).dispatch(request, *args, **kwargs)
 
+
 class NewMeasurementAPIFormView(CreateView):
     form_class = MeasurementForm
     template_name = 'measurement_form.html'
@@ -118,7 +120,7 @@ class NewMeasurementAPIFormView(CreateView):
         settings = self.get_plant().plantsettings
         if settings.mode == PlantSettings.TIME_BASED:
             last_watering = self.get_plant().waterings.order_by('-date')
-            if not last_watering or last_watering[0].date < datetime.now() - timedelta(hours=settings.value):
+            if not last_watering or last_watering[0].date < timezone.now() - timedelta(hours=settings.value):
                 return self.send_watering_info(settings.amount)
         elif settings.mode == PlantSettings.HUMIDITY_BASED:
             humidity = self.get_plant().measurements.order_by('-date')
