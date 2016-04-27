@@ -27,6 +27,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+ADMINS = [('Kuba', 'jakub.ste+iot_errors@gmail.com')]
+
 
 # Application definition
 
